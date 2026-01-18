@@ -1,0 +1,18 @@
+<div id="cards-container"></div>
+<button id="add-card-button">Добавить</button>
+
+<div id="add-site-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <form id="add-site-form">
+      <h3>Добавить сайт</h3>
+      <label for="site-name">Название сайта:</label>
+      <input type="text" id="site-name" name="name" required>
+      <label for="site-link">Ссылка на сайт:</label>
+      <input type="url" id="site-link" name="site_link" required>
+      <label for="figma-link">Ссылка на макет в Figma:</label>
+      <input type="url" id="figma-link" name="figma_link" required>
+      <button type="submit">Добавить</button>
+    </form>
+  </div>
+</div>
