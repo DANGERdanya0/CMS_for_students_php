@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const loadDynamicContent = (page) => {
-        if (page === 'laboratory' || page === 'practical' || page === 'essays') {
+        if (page === 'laboratory' || page === 'practical' || page === 'essays' || page === 'otrabotka' || page === 'narabotka' || page === 'kursovie') {
             loadWorks(page);
             setupWorkModal(page);
         } else if (page === 'sites') {
@@ -32,13 +32,29 @@ document.addEventListener('DOMContentLoaded', () => {
         works.forEach(work => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `
-                <h3>${work.name}</h3>
-                <p>Дата выполнения: ${work.date}</p>
-                <a href="${work.file_link}" target="_blank">Скачать отчет</a>
-                <button class="delete-button" data-id="${work.id}">Удалить</button>
-            `;
+            if (type === 'kursovie') {
+                card.innerHTML = `
+                    <h3>${work.name}</h3>
+                    <p>Дата выполнения: ${work.date}</p>
+                    <button class="download-button" data-link="${work.doc_file_link}">Скачать документацию</button>
+                    <button class="download-button" data-link="${work.zip_file_link}">Скачать архив</button>
+                    <button class="delete-button" data-id="${work.id}">Удалить</button>
+                `;
+            } else {
+                card.innerHTML = `
+                    <h3>${work.name}</h3>
+                    <p>Дата выполнения: ${work.date}</p>
+                    <button class="download-button" data-link="${work.file_link}">Скачать отчет</button>
+                    <button class="delete-button" data-id="${work.id}">Удалить</button>
+                `;
+            }
             container.appendChild(card);
+
+            card.querySelectorAll('.download-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    window.open(button.dataset.link, '_blank');
+                });
+            });
 
             card.querySelector('.delete-button').addEventListener('click', async () => {
                 const password = prompt('Введите пароль для удаления:');
@@ -219,5 +235,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load the default page
-    loadPage('laboratory');
+    loadPage('essays');
 });

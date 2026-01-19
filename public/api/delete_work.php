@@ -39,11 +39,28 @@ foreach ($works as $work) {
     }
 }
 
-// If the work is found, delete the associated file
-if ($workToDelete && isset($workToDelete['file_link'])) {
-    $fileToDelete = __DIR__ . '/../' . $workToDelete['file_link'];
-    if (file_exists($fileToDelete)) {
-        unlink($fileToDelete);
+// If the work is found, delete the associated file(s)
+if ($workToDelete) {
+    if ($type === 'kursovie') {
+        if (isset($workToDelete['doc_file_link'])) {
+            $fileToDelete = __DIR__ . '/../' . $workToDelete['doc_file_link'];
+            if (file_exists($fileToDelete)) {
+                unlink($fileToDelete);
+            }
+        }
+        if (isset($workToDelete['zip_file_link'])) {
+            $fileToDelete = __DIR__ . '/../' . $workToDelete['zip_file_link'];
+            if (file_exists($fileToDelete)) {
+                unlink($fileToDelete);
+            }
+        }
+    } else {
+        if (isset($workToDelete['file_link'])) {
+            $fileToDelete = __DIR__ . '/../' . $workToDelete['file_link'];
+            if (file_exists($fileToDelete)) {
+                unlink($fileToDelete);
+            }
+        }
     }
 }
 

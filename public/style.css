@@ -75,7 +75,7 @@ body {
     margin-left: 270px; /* Push content when sidebar is open */
 }
 
-.card a {
+.card p a {
     color: #3498db;
 }
 
@@ -173,16 +173,33 @@ body {
     cursor: pointer;
 }
 
+.delete-button, .download-button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .delete-button {
     background-color: #e74c3c;
     color: white;
-    border: none;
     padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
     float: right;
 }
 
 .delete-button:hover {
     background-color: #c0392b;
+}
+
+.download-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.download-button:hover {
+    background-color: #2980b9;
 }

@@ -20,23 +20,76 @@ $name = $_POST['name'];
 $filePath = __DIR__ . '/../../data/' . $type . '_works.json';
 $uploadsDir = __DIR__ . '/../uploads/';
 
-// --- File Upload ---
-$fileLink = '';
-if (isset($_FILES['file'])) {
-    if (!is_dir($uploadsDir)) {
-        mkdir($uploadsDir, 0777, true);
-    }
-    $originalName = basename($_FILES['file']['name']);
-    $newFileName = round(microtime(true) * 1000) . '-' . $originalName;
-    $targetFile = $uploadsDir . $newFileName;
+if ($type === 'kursovie') {
+    $docFileLink = '';
+    $zipFileLink = '';
 
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFile)) {
-        $fileLink = 'uploads/' . $newFileName;
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to upload file.']);
-        exit;
+    if (isset($_FILES['doc_file'])) {
+        if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0777, true);
+        }
+        $originalName = basename($_FILES['doc_file']['name']);
+        $newFileName = round(microtime(true) * 1000) . '-' . $originalName;
+        $targetFile = $uploadsDir . $newFileName;
+
+        if (move_uploaded_file($_FILES['doc_file']['tmp_name'], $targetFile)) {
+            $docFileLink = 'uploads/' . $newFileName;
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to upload documentation file.']);
+            exit;
+        }
     }
+
+    if (isset($_FILES['zip_file'])) {
+        if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0777, true);
+        }
+        $originalName = basename($_FILES['zip_file']['name']);
+        $newFileName = round(microtime(true) * 1000) . '-' . $originalName;
+        $targetFile = $uploadsDir . $newFileName;
+
+        if (move_uploaded_file($_FILES['zip_file']['tmp_name'], $targetFile)) {
+            $zipFileLink = 'uploads/' . $newFileName;
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to upload zip file.']);
+            exit;
+        }
+    }
+
+    $newWork = [
+        'id' => round(microtime(true) * 1000),
+        'name' => $name,
+        'date' => date('d.m.Y'),
+        'doc_file_link' => $docFileLink,
+        'zip_file_link' => $zipFileLink
+    ];
+} else {
+    // --- File Upload ---
+    $fileLink = '';
+    if (isset($_FILES['file'])) {
+        if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0777, true);
+        }
+        $originalName = basename($_FILES['file']['name']);
+        $newFileName = round(microtime(true) * 1000) . '-' . $originalName;
+        $targetFile = $uploadsDir . $newFileName;
+
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFile)) {
+            $fileLink = 'uploads/' . $newFileName;
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to upload file.']);
+            exit;
+        }
+    }
+    $newWork = [
+        'id' => round(microtime(true) * 1000), // PHP equivalent of Date.now()
+        'name' => $name,
+        'date' => date('d.m.Y'),
+        'file_link' => $fileLink
+    ];
 }
 
 // --- Read, Update, Write JSON ---
@@ -47,13 +100,6 @@ if (!file_exists($filePath)) {
 }
 
 $works = json_decode(file_get_contents($filePath), true);
-
-$newWork = [
-    'id' => round(microtime(true) * 1000), // PHP equivalent of Date.now()
-    'name' => $name,
-    'date' => date('d.m.Y'),
-    'file_link' => $fileLink
-];
 
 $works[] = $newWork;
 
