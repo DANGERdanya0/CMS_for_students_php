@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$PASSWORD = 'M1r0shk1na';
+$PASSWORD = 'Pass';
 
 if (!isset($_POST['password']) || $_POST['password'] !== $PASSWORD) {
     http_response_code(401);
