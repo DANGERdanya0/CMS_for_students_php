@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$PASSWORD = 'M1r0shk1na';
+$PASSWORD = 'pass';
 
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
