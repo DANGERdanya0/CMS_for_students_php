@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$PASSWORD = 'Pass';
+$PASSWORD = 'M1r0shk1na';
 
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
@@ -29,12 +29,48 @@ if (!file_exists($filePath)) {
 
 $sites = json_decode(file_get_contents($filePath), true);
 
-$filteredSites = array_filter($sites, function($site) use ($id) {
-    return $site['id'] != $id;
-});
+$site_to_delete = null;
+$filteredSites = [];
+foreach($sites as $site) {
+    if ($site['id'] == $id) {
+        $site_to_delete = $site;
+    } else {
+        $filteredSites[] = $site;
+    }
+}
 
-// Re-index the array
-$filteredSites = array_values($filteredSites);
+
+if ($site_to_delete) {
+    if (isset($site_to_delete['site_path'])) {
+        $site_dir = __DIR__ . '/..' . $site_to_delete['site_path'];
+        if (is_dir($site_dir)) {
+            // Function to recursively delete a directory
+            function deleteDir($dirPath) {
+                if (!is_dir($dirPath)) {
+                    return;
+                }
+                if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+                    $dirPath .= '/';
+                }
+                $files = glob($dirPath . '*', GLOB_MARK);
+                foreach ($files as $file) {
+                    if (is_dir($file)) {
+                        deleteDir($file);
+                    } else {
+                        unlink($file);
+                    }
+                }
+                rmdir($dirPath);
+            }
+
+            deleteDir($site_dir);
+        }
+    }
+}
+
+
+// Re-index the array is not needed here as we build a new array
+// $filteredSites = array_values($filteredSites);
 
 if (file_put_contents($filePath, json_encode($filteredSites, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE))) {
     http_response_code(200);

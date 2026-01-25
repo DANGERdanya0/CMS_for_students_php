@@ -88,10 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
         sites.forEach(site => {
             const card = document.createElement('div');
             card.className = 'card';
+
+            let screenshotsHTML = '';
+            if (site.screenshots && site.screenshots.length > 0) {
+                screenshotsHTML = '<h4>Скриншоты:</h4>';
+                site.screenshots.forEach(screenshot => {
+                    screenshotsHTML += `<a href="${screenshot}" target="_blank"><img src="${screenshot}" alt="screenshot" style="width: 100px; height: auto; margin-right: 10px;"></a>`;
+                });
+            }
+
             card.innerHTML = `
                 <h3>${site.name}</h3>
-                <p><a href="${site.site_link}" target="_blank">Посетить сайт</a></p>
+                <p>${site.description || ''}</p>
+                <p><a href="${site.site_path}" target="_blank">Посетить сайт</a></p>
                 <p><a href="${site.figma_link}" target="_blank">Макет в Figma</a></p>
+                <div>${screenshotsHTML}</div>
                 <button class="delete-button" data-id="${site.id}">Удалить</button>
             `;
             container.appendChild(card);
@@ -194,15 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!password) return;
 
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            data.password = password;
+            formData.append('password', password);
             
             const response = await fetch('/api/add_site.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                body: formData
             });
 
             if (response.ok) {
@@ -212,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (response.status === 401) {
                 alert('Неверный пароль.');
             } else {
-                alert('Не удалось добавить сайт.');
+                const errorText = await response.text();
+                alert('Не удалось добавить сайт: ' + errorText);
             }
         };
     };

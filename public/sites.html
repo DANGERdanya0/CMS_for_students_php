@@ -6,12 +6,21 @@
     <span class="close-button">&times;</span>
     <form id="add-site-form">
       <h3>Добавить сайт</h3>
-      <label for="site-name">Название сайта:</label>
+      <label for="site-name">Название:</label>
       <input type="text" id="site-name" name="name" required>
-      <label for="site-link">Ссылка на сайт:</label>
-      <input type="url" id="site-link" name="site_link" required>
-      <label for="figma-link">Ссылка на макет в Figma:</label>
-      <input type="url" id="figma-link" name="figma_link" required>
+
+      <label for="site-description">Описание:</label>
+      <textarea id="site-description" name="description" rows="4" required></textarea>
+
+      <label for="figma-link">Ссылка на фигму:</label>
+      <input type="url" id="figma-link" name="figma_link">
+
+      <label for="site-zip">ZIP архив:</label>
+      <input type="file" id="site-zip" name="zip_file" accept=".zip" required>
+
+      <label for="site-screenshots">Скриншоты:</label>
+      <input type="file" id="site-screenshots" name="screenshots[]" multiple accept="image/*">
+
       <button type="submit">Добавить</button>
     </form>
   </div>
